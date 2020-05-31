@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:lakhimpur_kheri/screens/news/helper/newsSetting.dart';
 import 'package:lakhimpur_kheri/screens/news/helper/newssetting2.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 class BottomSheetMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    _feedback() async {
+      const url = 'mailto:mca.saboor@gmail.com?subject=News Feedback';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
     return Container(
       color: Colors.transparent,
       child: Container(
@@ -37,13 +44,17 @@ class BottomSheetMenu extends StatelessWidget {
                 leading: Icon(Icons.settings),
                 title: Text('Settings'),
                 onTap: () {
+                  Navigator.pop(context, true);
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (_) => new SettingsScreen()));
                 }),
             ListTile(
                 leading: Icon(Icons.help),
                 title: Text('Help & Feedback'),
-                onTap: () {}),
+                onTap: () {
+                  Navigator.pop(context, true);
+                  _feedback();
+                }),
           ],
         ),
       ),

@@ -3,7 +3,9 @@ import 'package:lakhimpur_kheri/screens/health_n_fitness/health_fitness.dart';
 import 'package:lakhimpur_kheri/screens/homePage/menu.dart';
 import 'package:lakhimpur_kheri/screens/news/a_news_app/news_app_main.dart';
 import 'package:lakhimpur_kheri/screens/news/newsFitnessCopy.dart';
+import 'package:lakhimpur_kheri/screens/news/news_web/src/ui/home_page.dart';
 import 'package:lakhimpur_kheri/screens/news/ui/screens/onboarding_screen.dart';
+import 'package:lakhimpur_kheri/screens/news2/a_news_app/news_app_main.dart';
 import 'package:lakhimpur_kheri/screens/schools/schools.dart';
 import 'package:lakhimpur_kheri/screens/schools/schools.dart';
 import 'package:lakhimpur_kheri/screens/homePage/circular_menu.dart';
@@ -394,7 +396,7 @@ class _HomePage2State extends State<HomePage2> {
                   onDoubleTap: () {
                     // Update the state of the ap  .then((val)=>{_getRequests()})
                     Navigator.of(context).push(
-                        new MaterialPageRoute(builder: (_) => new Jobs()));
+                        new MaterialPageRoute(builder: (_) => new NewsApp2()));
                   }),
               SizedBox(
                 width: 15.0,
@@ -408,7 +410,7 @@ class _HomePage2State extends State<HomePage2> {
                   onDoubleTap: () {
                     // Update the state of the ap  .then((val)=>{_getRequests()})
                     Navigator.of(context).push(
-                        new MaterialPageRoute(builder: (_) => new Tuitions()));
+                        new MaterialPageRoute(builder: (_) => new NewsWebHomePage()));
                   }),
             ],
           ),

@@ -11,23 +11,10 @@ class NewsApiProvider {
   final _prefs = SharedPreferences.getInstance();
   String cntry = 'in';
   final _apiKey = '429ac827df3e4e48a4bce86a0a4bf989';
-
   // Chech shared preference, push requset to newsapi.org server and parse to model
   Future<NewsModel> fetchNewsList() async {
-
     final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     String country = (sharedPrefs.getString('countryIsoCode') ?? 'in');
-//    String country = pref.getString('country');
-//    String country = pref.getString('countryIsoCode');
-//    if (country == 'Russia')
-//      cntry = 'ru';
-//    else if (country == 'US')
-//      cntry = 'us';
-//    else if (country == 'Germany')
-//      cntry = 'de';
-//    else if (country == 'United Kingdom')
-//      cntry = 'gb';
-//    else if (country == 'France') cntry = 'fr';
     String url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=$_apiKey";
     final response = await client.get(url);
     if (response.statusCode == 200) {
@@ -36,6 +23,25 @@ class NewsApiProvider {
       throw Exception("Faild to post!");
     }
   }
+  Future<NewsModel> fetchNewsBussiness() async {
+    String url = "https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=$_apiKey";
+    final response = await client.get(url);
+    if (response.statusCode == 200) {
+      return NewsModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception("Faild to post!");
+    }
+  }
+  Future<NewsModel> fetchNewsSports() async {
+    String url = "https://newsapi.org/v2/top-headlines?country=in&category=sports&apiKey=$_apiKey";
+    final response = await client.get(url);
+    if (response.statusCode == 200) {
+      return NewsModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception("Faild to post!");
+    }
+  }
+
 
   Future<NewsModel> fetchSearchNews() async {
     final SharedPreferences prefs = await _prefs;

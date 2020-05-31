@@ -22,8 +22,8 @@ dependencies:
   sqflite: any
   provider: ^4.0.5
   liquid_pull_to_refresh: ^1.1.1
-  share: any
-  shared_preferences: ^0.5.3+4
+  share: 0.6.4+3
+  shared_preferences: ^0.5.7+3
   intl: ^0.16.0
   font_awesome_flutter: ^8.4.0
   firebase_auth: any
@@ -43,13 +43,13 @@ dependencies:
   flutter_swiper: ^1.1.4
   cached_network_image: ^2.0.0
   charts_flutter: any
-  url_launcher: ^5.0.2
+  url_launcher: ^5.4.10
   flutter_localizations: # add this
     sdk: flutter # add this
   flutter_cupertino_localizations: ^1.0.1
   cloud_firestore: ^0.13.5
   image_picker: ^0.6.0+17
-  firebase_storage: any
+  firebase_storage: 3.1.6
   contact_picker: ^0.0.2
   photo_view: ^0.4.2
   english_words: ^3.1.5
@@ -72,6 +72,14 @@ dependencies:
   geolocator: any
 #  flutter_custom_clippers: ^0.1.1
   folding_cell: ^0.1.0
+
+# Top ten news
+  carousel_slider: ^1.3.1
+  html_unescape: ^1.0.1+3
+  flutter_webview_plugin: ^0.3.11
+  pull_to_refresh: ^1.5.8
+  transparent_image: ^0.1.0
+  flutter_spinkit: ^4.1.2
 
 dev_dependencies:
   flutter_test:

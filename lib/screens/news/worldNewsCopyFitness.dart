@@ -168,64 +168,16 @@ class _WorldNewsMyDiaryScreenState extends State<WorldNewsMyDiaryScreen>
   Widget _tabBarView() {
     debugPrint("in ........................_tabBarView");
     return TabBarView(controller: tabController, children: [
-      new GestureDetector(
-        onTap: () {
-          // Change the color of the container beneath
-        },
-        child: Container(child:Center(child:Text("Container 1")),),
-      ),
-      new GestureDetector(
-        onTap: () {
-          // Change the color of the container beneath
-        },
-        child: Container(child:Center(child:Text("Container 2")),),
-      ),
-      new GestureDetector(
-        onTap: () {
-          // Change the color of the container beneath
-        },
-        child: Container(child:Center(child:Text("Container 3")),),
-      ),
-      new GestureDetector(
-        onTap: () {},
-        child:Container(child:Center(child:Text("Container 4")),),
-      ),
-      new GestureDetector(
-        onTap: () {
-          // Change the color of the container beneath
-        },
-        child: Container(child:Center(child:Text("Container 5")),),
-      ),
-      new GestureDetector(
-        onTap: () {
-          // Change the color of the container beneath
-        },
-        child: Container(child:Center(child:Text("Container 6")),),
-      ),
-      new GestureDetector(
-        onTap: () {
-          // Change the color of the container beneath
-        },
-        child: Container(child:Center(child:Text("Container 7")),),
-      ),
-      new GestureDetector(
-        onTap: () {
-          // Change the color of the container beneath
-        },
-        child:Container(child:Center(child:Text("Container 8")),),
-      ),
-      new GestureDetector(
-        onTap: () {
-          // Change the color of the container beneath
-        },
-        child: Container(child:Center(child:Text("Container 9")),),
-      ),
-      new GestureDetector(
-        onTap: () {
-          // Change the color of the container beneath
-        },
-        child: Container(child:Center(child:Text("Container 10")),),
-      ),
+    Center(child:Text("Container 1")),
+      Center(child:Text("Container 1")),
+      Center(child:Text("Container 1")),
+      Center(child:Text("Container 1")),
+      Center(child:Text("Container 1")),
+      Center(child:Text("Container 1")),
+      Center(child:Text("Container 1")),
+      Center(child:Text("Container 1")),
+      Center(child:Text("Container 1")),
+      Center(child:Text("Container 1")),
     ]);
   }
   MyAppBar() {
@@ -266,7 +218,6 @@ class _WorldNewsMyDiaryScreenState extends State<WorldNewsMyDiaryScreen>
           Tabs("Sports"),
           Tabs("Technology"),
         ],
-        controller: tabController,
       ),
     );
   }

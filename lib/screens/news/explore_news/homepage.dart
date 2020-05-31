@@ -45,7 +45,7 @@ class _AllHomePageState extends State<AllHomePage> {
                   indicator: BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                      color: Colors.white),
+                      color: Colors.white54),
                   isScrollable: true,
                   onTap: (index) {
                     setState(() {

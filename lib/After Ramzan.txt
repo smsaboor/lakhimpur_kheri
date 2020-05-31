@@ -8,7 +8,8 @@ news app me 5 bottom navigation dye
   offer,opening,championships, tabs sochne hai fir tehsil select karne pr usme news dkhaye.
 4-bottom navigation me news save karne ke 4 tarike soche hain
    a-local mobile me sqllite/moor database [images ke lye ya to gallery me save krana hai ya base64 string me convert karke database me.
-   b-cloud me data base jo phle se ban chuka hai photo ke lye ya to links ya google firestore me yeh bhi bna hai offer tab me.
+   b-cloud me data base jo phle se ban chuka hai photo ke lye google firestore se link dunga ya whatsapp ki trah local,
+      me yeh bhi bna hai offer tab me.(ya gdrive par google sheet ka use karke aur photon bhi gdrive pr)
    c-images capture karke cloud pr store krana ya user ki gdrive me save krana,float butoon ke zrye
    d-gallery me captured news save krana aur unko display krna, float butoon ke zrye
 5-bottom navigation me other news ki hirerchi sochi hai jese sports tab ke andar nested tab jo sabhi sports ke tab rkhe

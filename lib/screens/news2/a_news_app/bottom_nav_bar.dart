@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:lakhimpur_kheri/screens/news/a_news_app/ui/screens/settings_screen.dart';
 import 'package:lakhimpur_kheri/screens/news2/a_news_app/bottom_nav_bar.dart';
-import 'package:lakhimpur_kheri/screens/news/app_menu.dart';
+import 'package:lakhimpur_kheri/screens/news/bottom_menu_asGNews.dart';
 import 'package:lakhimpur_kheri/screens/news/helper/newsSetting.dart';
 import 'package:lakhimpur_kheri/screens/news/helper/widgets.dart';
 import 'package:lakhimpur_kheri/screens/news/views/localnews.dart';

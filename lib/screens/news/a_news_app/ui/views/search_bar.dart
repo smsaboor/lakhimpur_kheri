@@ -23,7 +23,7 @@ buildSearchBar(BuildContext context) {
                         border: InputBorder.none,
                         hintStyle:
                             TextStyle(fontSize: 18, color: Colors.black54),
-                        hintText: 'Search news'),
+                        hintText: 'Search newss'),
                     textInputAction: TextInputAction.search,
                     cursorColor: Colors.black54,
                     style: TextStyle(fontSize: 18, color: Colors.black54),

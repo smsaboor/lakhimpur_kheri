@@ -19,19 +19,10 @@ class _CategoryNewsState extends State<CategoryNews> {
 
   @override
   void initState() {
-    getNews();
     // TODO: implement initState
     super.initState();
   }
 
-  void getNews() async {
-    NewsForCategorie news = NewsForCategorie();
-    await news.getNewsForCategory(widget.newsCategory);
-    newslist = news.news;
-    setState(() {
-      _loading = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
