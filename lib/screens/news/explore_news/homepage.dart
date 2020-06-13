@@ -23,6 +23,7 @@ class _AllHomePageState extends State<AllHomePage> {
       length: 5,
       child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             // backgroundColor: Color(0xff109618),
             backgroundColor: Colors.green,
 //            title: Padding(

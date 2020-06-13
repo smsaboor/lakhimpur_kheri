@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'category.dart';
 import 'demo_values.dart';
 
-class Menu extends StatelessWidget {
+class GridMenu extends StatelessWidget {
   static final String path = "lib/src/pages/quiz_app/home.dart";
   final List<Color> tileColors = [
     Colors.green,

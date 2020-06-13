@@ -1,209 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lakhimpur_kheri/screens/news/top_ten_news/newsCard.dart';
-import 'package:lakhimpur_kheri/screens/news/views/article_view.dart';
-import 'package:flutter/rendering.dart';
 import 'package:lakhimpur_kheri/screens/news/views/cloud_downlods.dart';
-
-//import 'package:firebase_mlkit_language/firebase_mlkit_language.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:transparent_image/transparent_image.dart';
-import 'package:lakhimpur_kheri/screens/news/top_ten_news/loading.dart';
-import 'package:intl/intl.dart';
-
-class NewsTile extends StatelessWidget {
-  final String source, imgUrl, title, desc, content, posturl, publishAt;
-
-  NewsTile(
-      {this.source,
-      this.imgUrl,
-      this.desc,
-      this.title,
-      this.content,
-      @required this.posturl,
-      this.publishAt});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ArticleView(postUrl: posturl)));
-      },
-      child: Container(
-          margin: EdgeInsets.only(bottom: 24),
-          width: MediaQuery.of(context).size.width,
-          child: Container(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              alignment: Alignment.bottomCenter,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(6),
-                      bottomLeft: Radius.circular(6))),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: Stack(children: <Widget>[
-                        Positioned.fill(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: Loading(),
-                        )),
-                        Center(
-                          child: FadeInImage.memoryNetwork(
-                            placeholder: kTransparentImage,
-                            image: imgUrl,
-                            height: 200,
-                            width: MediaQuery.of(context).size.width,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                            left: 10.0,
-                            right: 10.0,
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  source,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Container(
-                                  child: Row(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.share,
-                                          color: Colors.yellow,
-                                        ),
-                                        onPressed: () {},
-                                      ),
-                                      IconButton(
-                                          icon: Icon(
-                                            Icons.favorite,
-                                            color: Colors.yellow,
-                                          ),
-                                          onPressed: () {}),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )),
-                        Positioned(
-                          top: 60.0,
-                          left: 10.0,
-                          right: 10.0,
-                          child: _dateItemBuild(),
-                        ),
-                        Positioned(
-                          top: 165.0,
-                          left: 10.0,
-                          right: 20.0,
-                          child: Text(
-                            title,
-                            maxLines: 2,
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),),
-                        ),
-                      ])),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    title,
-                    maxLines: 2,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    desc,
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black54, fontSize: 14),
-                  )
-                ],
-              ),
-            ),
-          )),
-    );
-  }
-
-  _columnWithContent() {
-    return Column(
-      children: <Widget>[
-        _headerItemBuild(),
-        _textItemBuild(),
-        _dateItemBuild(),
-      ],
-    );
-  }
-
-  _headerItemBuild() {
-    return Row(
-      children: <Widget>[
-        Text(
-          source,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        Container(
-          child: Row(
-            children: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.share,
-                ),
-                onPressed: () {},
-              ),
-              IconButton(
-                  icon: Icon(
-                    Icons.favorite,
-                  ),
-                  onPressed: () {}),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  _dateItemBuild() {
-    // Parse date to normal format
-    DateFormat format = DateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    final unformedDate = format.parse(publishAt);
-    Duration difference = unformedDate.difference(DateTime.now());
-
-    return Container(
-      padding: EdgeInsets.only(top: 12),
-      child: Text(
-        (int.tryParse(difference.inHours.abs().toString()) < 12)
-            ? difference.inHours.abs().toString() + " hours ago"
-            : difference.inDays.abs().toString() + " days ago",
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-      ),
-      alignment: Alignment.centerLeft,
-    );
-  }
-
-  _textItemBuild() {
-    return Flexible(
-      child: new Text(
-        "helo hay this is for news to check it works.",
-        style: new TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 8, color: Colors.white),
-      ),
-    );
-  }
-}
+import 'package:lakhimpur_kheri/screens/news/top_ten_news/newsCard.dart';
 
 Widget Tabs(String tabn) {
   return Tab(
@@ -302,6 +99,7 @@ Widget TabBarLocal() {
 
 MyAppBarDownloads() {
   return AppBar(
+    automaticallyImplyLeading: false,
     title: title("Downloaded", "News"),
     elevation: 4,
     backgroundColor: Colors.red,
@@ -333,6 +131,7 @@ MyAppBarDownloads() {
 
 MyAppBarForYou() {
   return AppBar(
+    automaticallyImplyLeading: false,
     backgroundColor: Colors.white,
     bottom: PreferredSize(
       preferredSize: Size.fromHeight(5.0),
@@ -347,34 +146,6 @@ MyAppBarForYou() {
       ),
     ),
   );
-}
-
-Widget tabBarViewDownloads() {
-  debugPrint("in ........................_tabBarView");
-  return TabBarView(children: [
-    new GestureDetector(
-      onTap: () {
-        // Change the color of the container beneath
-      },
-      child: Container(),
-    ),
-    new GestureDetector(
-      onTap: () {
-        // Change the color of the container beneath
-      },
-      child: CloudDownloads(),
-    ),
-    new GestureDetector(
-      onTap: () {
-        // Change the color of the container beneath
-      },
-      child: Container(),
-    ),
-    new GestureDetector(
-      onTap: () {},
-      child: Container(),
-    ),
-  ]);
 }
 
 Widget tabBarViewForYou() {

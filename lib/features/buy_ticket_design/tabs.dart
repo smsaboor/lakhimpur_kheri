@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lakhimpur_kheri/features/buy_ticket_design/cards_example.dart';
 import 'package:lakhimpur_kheri/features/buy_ticket_design/lakes_example.dart';
 import 'package:lakhimpur_kheri/features/flodingCell/fcmain.dart';
+
 class Tabs extends StatelessWidget {
+  bool isSelected;
   @override
   Widget build(BuildContext context) {
     return Row(

@@ -18,7 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/Constants/constants.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/Model/theme_model.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/UI/Widgets/splash_screen.dart';
-import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/UI/main_ui.dart';
+import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/mtmain.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/UI/settings.dart';
 import 'package:provider/provider.dart';
 
@@ -81,7 +81,8 @@ void main() {
     );
   };
   WidgetsFlutterBinding.ensureInitialized();
-    runApp(
+
+  runApp(
         MultiProvider(
             providers: [
               ChangeNotifierProvider<ThemeModel>(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/UI/main_ui.dart';
+import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/mtmain.dart';
 import 'package:lakhimpur_kheri/screens/homePage/HomePage2.dart';
 import 'package:lakhimpur_kheri/user_registration.dart';
 import 'package:firebase_auth/firebase_auth.dart';

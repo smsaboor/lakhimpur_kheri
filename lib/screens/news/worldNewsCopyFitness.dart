@@ -1,10 +1,10 @@
-import 'package:lakhimpur_kheri/screens/news/fitness_app/ui_view/body_measurement.dart';
-import 'package:lakhimpur_kheri/screens/news/fitness_app/ui_view/glass_view.dart';
-import 'package:lakhimpur_kheri/screens/news/fitness_app/ui_view/mediterranesn_diet_view.dart';
-import 'package:lakhimpur_kheri/screens/news/fitness_app/ui_view/title_view.dart';
-import 'package:lakhimpur_kheri/screens/news/fitness_app/fintness_app_theme.dart';
-import 'package:lakhimpur_kheri/screens/news/fitness_app/my_diary/meals_list_view.dart';
-import 'package:lakhimpur_kheri/screens/news/fitness_app/my_diary/water_view.dart';
+import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/ui_view/body_measurement.dart';
+import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/ui_view/glass_view.dart';
+import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/ui_view/mediterranesn_diet_view.dart';
+import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/ui_view/title_view.dart';
+import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/fintness_app_theme.dart';
+import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/my_diary/meals_list_view.dart';
+import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/my_diary/water_view.dart';
 import 'package:flutter/material.dart';
 import 'package:lakhimpur_kheri/screens/news/helper/widgets.dart';
 import 'package:lakhimpur_kheri/zCountryPicker/utils/utils.dart';

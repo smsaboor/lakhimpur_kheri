@@ -4,7 +4,6 @@ import 'package:lakhimpur_kheri/screens/news/a_news_app/ui/views/stream_builder.
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-ScrollController scrollController;
 
 class SearchScreen extends StatefulWidget {
   final String title;
@@ -15,6 +14,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  ScrollController scrollController;
   @override
   void initState() {
     scrollController = ScrollController()
@@ -27,11 +27,6 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

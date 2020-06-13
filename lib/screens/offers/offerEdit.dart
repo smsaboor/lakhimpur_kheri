@@ -99,7 +99,7 @@ class _OffersEditState extends State<OffersEdit> {
   }
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
     setState(() {
       _image = image;
       print('Image Path $_image');

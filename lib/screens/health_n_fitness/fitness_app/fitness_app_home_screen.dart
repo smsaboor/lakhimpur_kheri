@@ -1,17 +1,16 @@
 import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/models/tabIcon_data.dart';
 import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/traning/training_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/bottom_navigation_view/bottom_bar_view.dart';
-import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/fintness_app_theme.dart';
-import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/my_diary/my_diary_screen.dart';
-import 'package:lakhimpur_kheri/screens/news/worldNewsCopyFitness.dart';
+import 'bottom_navigation_view/bottom_bar_view.dart';
+import 'fintness_app_theme.dart';
+import 'my_diary/my_diary_screen.dart';
 
-class NewsFitnessAppHomeScreen extends StatefulWidget {
+class FitnessAppHomeScreen extends StatefulWidget {
   @override
-  _NewsFitnessAppHomeScreenState createState() => _NewsFitnessAppHomeScreenState();
+  _FitnessAppHomeScreenState createState() => _FitnessAppHomeScreenState();
 }
 
-class _NewsFitnessAppHomeScreenState extends State<NewsFitnessAppHomeScreen>
+class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
 
@@ -108,7 +107,7 @@ class _NewsFitnessAppHomeScreenState extends State<NewsFitnessAppHomeScreen>
                 }
                 setState(() {
                   tabBody =
-                      WorldNewsMyDiaryScreen(animationController: animationController);
+                      TrainingScreen(animationController: animationController);
                 });
               });
             }

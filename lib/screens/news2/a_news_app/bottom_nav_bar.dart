@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:lakhimpur_kheri/screens/news/a_news_app/ui/screens/settings_screen.dart';
 import 'package:lakhimpur_kheri/screens/news2/a_news_app/bottom_nav_bar.dart';
 import 'package:lakhimpur_kheri/screens/news/bottom_menu_asGNews.dart';
-import 'package:lakhimpur_kheri/screens/news/helper/newsSetting.dart';
 import 'package:lakhimpur_kheri/screens/news/helper/widgets.dart';
 import 'package:lakhimpur_kheri/screens/news/views/localnews.dart';
 import 'package:lakhimpur_kheri/screens/news/a_news_app/ui/screens/news_list.dart';
@@ -450,59 +449,59 @@ class _NewsHome2State extends State<NewsHome2> {
         onTap: () {
           // Change the color of the container beneath
         },
-        child: LocalNews("lakhimpur"),
+        child: Container(),
       ),
       new GestureDetector(
         onTap: () {
           // Change the color of the container beneath
         },
-        child: LocalNews("sports"),
+        child: Container(),
       ),
       new GestureDetector(
         onTap: () {
           // Change the color of the container beneath
         },
-        child: LocalNews("education"),
+        child: Container(),
       ),
       new GestureDetector(
         onTap: () {},
-        child: LocalNews("education"),
+        child: Container(),
       ),
       new GestureDetector(
         onTap: () {
           // Change the color of the container beneath
         },
-        child: LocalNews("education"),
+        child: Container(),
       ),
       new GestureDetector(
         onTap: () {
           // Change the color of the container beneath
         },
-        child: LocalNews("education"),
+        child: Container(),
       ),
       new GestureDetector(
         onTap: () {
           // Change the color of the container beneath
         },
-        child: LocalNews("education"),
+        child: Container(),
       ),
       new GestureDetector(
         onTap: () {
           // Change the color of the container beneath
         },
-        child: LocalNews("education"),
+        child: Container(),
       ),
       new GestureDetector(
         onTap: () {
           // Change the color of the container beneath
         },
-        child: LocalNews("education"),
+        child: Container(),
       ),
       new GestureDetector(
         onTap: () {
           // Change the color of the container beneath
         },
-        child: LocalNews("education"),
+        child: Container(),
       ),
     ]);
   }

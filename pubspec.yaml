@@ -15,11 +15,15 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
+  scoped_model: ^1.0.1
 
 dependencies:
   flutter:
     sdk: flutter
   sqflite: any
+#  firebase_ml_vision: ^0.2.0+2
+  image_downloader: ^0.20.0
+  flutter_custom_tabs: ^0.6.0
   provider: ^4.0.5
   liquid_pull_to_refresh: ^1.1.1
   share: 0.6.4+3
@@ -29,6 +33,10 @@ dependencies:
   firebase_auth: any
   google_sign_in: ^4.0.11
   flutter_svg: any   # for BMI calculator in gym tab
+  path_provider: any
+  image_picker_gallery_camera: ^0.1.6
+  gallery_saver: ^2.0.1
+
 
   # Block Pattern........................................................................
   firebase_core: ^0.4.3+3
@@ -51,7 +59,7 @@ dependencies:
   image_picker: ^0.6.0+17
   firebase_storage: 3.1.6
   contact_picker: ^0.0.2
-  photo_view: ^0.4.2
+  photo_view: ^0.9.2
   english_words: ^3.1.5
   flutter_lorem: ^1.1.0
   rxdart: ^00.24.0
@@ -66,6 +74,10 @@ dependencies:
   dynamic_theme: ^1.0.1
   flutter_material_color_picker: ^1.0.5
   flutter_picker: ^1.1.4
+  firebase_ml_vision: ^0.9.3+8
+  google_fonts: ^0.2.0
+  flutter_icons: ^1.0.0+1
+  fleva_icons: ^1.0.0
 #  flutter_webview_plugin: any
 #  firebase_mlkit_language: ^1.1.2
 

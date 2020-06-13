@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lakhimpur_kheri/screens/news/helper/news.dart';
 import 'package:lakhimpur_kheri/screens/news/models/news_model.dart';
-import 'package:lakhimpur_kheri/screens/news/resources/news_api_provider.dart';
 //import 'package:lakhimpur_kheri/screens/news/ui/screens/web_view.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';

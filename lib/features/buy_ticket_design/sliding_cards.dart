@@ -45,6 +45,54 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
             assetName: 'rodion-kutsaev.jpeg',
             offset: pageOffset - 1,
           ),
+          SlidingCard(
+            name: 'Shenzhen GLOBAL DESIGN AWARD 2018',
+            date: '4.20-30',
+            assetName: 'steve-johnson.jpeg',
+            offset: pageOffset - 2,
+          ),
+          SlidingCard(
+            name: 'Dawan District, Guangdong Hong Kong and Macao',
+            date: '4.28-31',
+            assetName: 'rodion-kutsaev.jpeg',
+            offset: pageOffset - 3,
+          ),
+          SlidingCard(
+            name: 'Shenzhen GLOBAL DESIGN AWARD 2018',
+            date: '4.20-30',
+            assetName: 'steve-johnson.jpeg',
+            offset: pageOffset - 4,
+          ),
+          SlidingCard(
+            name: 'Dawan District, Guangdong Hong Kong and Macao',
+            date: '4.28-31',
+            assetName: 'rodion-kutsaev.jpeg',
+            offset: pageOffset - 5,
+          ),
+          SlidingCard(
+            name: 'Shenzhen GLOBAL DESIGN AWARD 2018',
+            date: '4.20-30',
+            assetName: 'steve-johnson.jpeg',
+            offset: pageOffset - 6,
+          ),
+          SlidingCard(
+            name: 'Dawan District, Guangdong Hong Kong and Macao',
+            date: '4.28-31',
+            assetName: 'rodion-kutsaev.jpeg',
+            offset: pageOffset - 7,
+          ),
+          SlidingCard(
+            name: 'Shenzhen GLOBAL DESIGN AWARD 2018',
+            date: '4.20-30',
+            assetName: 'steve-johnson.jpeg',
+            offset: pageOffset - 8,
+          ),
+          SlidingCard(
+            name: 'Dawan District, Guangdong Hong Kong and Macao',
+            date: '4.28-31',
+            assetName: 'rodion-kutsaev.jpeg',
+            offset: pageOffset - 9,
+          ),
         ],
       ),
     );
@@ -107,9 +155,9 @@ class CardContent extends StatelessWidget {
 
   const CardContent(
       {Key key,
-      @required this.name,
-      @required this.date,
-      @required this.offset})
+        @required this.name,
+        @required this.date,
+        @required this.offset})
       : super(key: key);
 
   @override

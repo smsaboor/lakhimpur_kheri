@@ -19,7 +19,6 @@ export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'package:lakhimpur_kheri/localisation/localization_two/app_translations.dart';
 export 'package:lakhimpur_kheri/localisation/localization_two/application.dart';
 export 'package:provider/provider.dart';
-export 'package:lakhimpur_kheri/screens/homePage/modelMenu.dart';
 export 'package:ff_navigation_bar/ff_navigation_bar.dart';
 
 

@@ -3,14 +3,16 @@ import 'package:lakhimpur_kheri/screens/news/a_news_app/ui/views/search_bar.dart
 import 'package:lakhimpur_kheri/screens/news/a_news_app/ui/views/stream_builder.dart';
 import 'package:flutter/material.dart';
 
-ScrollController scrollControllerNewsList;
+
 
 class NewsList extends StatefulWidget {
+
   @override
   createState() => NewsListState();
 }
 
 class NewsListState extends State<NewsList> {
+  ScrollController scrollControllerNewsList;
   @override
   void initState() {
     setState(() {});
@@ -32,7 +34,7 @@ class NewsListState extends State<NewsList> {
       child: CustomScrollView(
         controller: scrollControllerNewsList,
         slivers: <Widget>[
-          buildSearchBar(context), // Serach
+//          buildSearchBar(context), // Serach
           streamBuilder(bloc.allNews),
         ],
       ),

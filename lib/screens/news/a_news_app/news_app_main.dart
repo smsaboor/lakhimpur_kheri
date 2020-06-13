@@ -59,9 +59,6 @@ class NewsAppState extends State<NewsApp> {
             debugShowCheckedModeBanner: false,
             home: BottomNavBar(),
             theme: theme,
-            routes: {
-              "/news": (_) => BottomNavBar(),
-            },
           );
         });
   }

@@ -1,4 +1,4 @@
-
+// saboor this class NewsArticle used for map from json data from news api .org database
 // news_app project
 
 class NewsModel {
@@ -7,7 +7,6 @@ class NewsModel {
   List<Articles> articles;
 
   NewsModel({this.status, this.totalResults, this.articles});
-
   NewsModel.fromJson(Map<dynamic, dynamic> json) {
     status = json['status'];
     totalResults = json['totalResults'];
@@ -39,16 +38,16 @@ class Articles {
   String urlToImage;
   String publishedAt;
   String content;
-
-  Articles(
-      {this.source,
+  bool isBookmarked;
+  Articles(this.source,
       this.author,
       this.title,
       this.description,
       this.url,
       this.urlToImage,
       this.publishedAt,
-      this.content});
+      this.content,
+      this.isBookmarked);
 
   Articles.fromJson(Map json) {
     source = json['source'] != null ? Source.fromJson(json['source']) : null;
@@ -59,6 +58,7 @@ class Articles {
     urlToImage = json['urlToImage'];
     content = json['content'];
     publishedAt = json['publishedAt'];
+    isBookmarked = json['isBookmarked'].toString().toLowerCase() == 'true';
   }
 
   Map<String, dynamic> toJson() {
@@ -73,6 +73,7 @@ class Articles {
     data['urlToImage'] = this.urlToImage;
     data['publishedAt'] = this.publishedAt;
     data['content'] = this.content;
+
     return data;
   }
 }

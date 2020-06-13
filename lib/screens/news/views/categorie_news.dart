@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lakhimpur_kheri/screens/news/helper/news.dart';
-import 'package:lakhimpur_kheri/screens/news/helper/widgets.dart';
+import 'news_tile.dart';
 
 
 class CategoryNews extends StatefulWidget {

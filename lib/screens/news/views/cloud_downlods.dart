@@ -3,19 +3,16 @@ import 'package:lakhimpur_kheri/screens/news/stream_builder_newsaapp.dart';
 import 'package:flutter/material.dart';
 
 ScrollController scrollControllerLikedList;
-
 class CloudDownloads extends StatefulWidget {
   @override
   createState() => CloudDownloadsState();
 }
-
 class CloudDownloadsState extends State<CloudDownloads> {
   @override
   void initState() {
     scrollControllerLikedList = ScrollController(initialScrollOffset: 84);
     super.initState();
   }
-
   @override
   void dispose() {
     scrollControllerLikedList.dispose();
@@ -40,7 +37,7 @@ class CloudDownloadsState extends State<CloudDownloads> {
               padding: EdgeInsets.all(6),
               alignment: Alignment.center,
               child: Text(
-                'You favorite news',
+                'You favorite newss',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 24),
               ),

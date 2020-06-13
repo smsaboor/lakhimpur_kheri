@@ -3,13 +3,9 @@ import 'package:lakhimpur_kheri/screens/health_n_fitness/health_fitness.dart';
 import 'package:lakhimpur_kheri/screens/homePage/menu.dart';
 import 'package:lakhimpur_kheri/screens/news/a_news_app/news_app_main.dart';
 import 'package:lakhimpur_kheri/screens/news/newsFitnessCopy.dart';
-import 'package:lakhimpur_kheri/screens/news/news_web/src/ui/home_page.dart';
-import 'package:lakhimpur_kheri/screens/news/ui/screens/onboarding_screen.dart';
 import 'package:lakhimpur_kheri/screens/news2/a_news_app/news_app_main.dart';
 import 'package:lakhimpur_kheri/screens/schools/schools.dart';
 import 'package:lakhimpur_kheri/screens/schools/schools.dart';
-import 'package:lakhimpur_kheri/screens/homePage/circular_menu.dart';
-import 'package:lakhimpur_kheri/screens/homePage/circular_menu_item.dart';
 import 'dependency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -152,7 +148,7 @@ class _HomePage2State extends State<HomePage2> {
             body: Container(child:
               SlideListView(
                 view1: _buildHomePage(),
-                view2: Menu(),
+                view2: GridMenu(),
                 floatingActionButtonColor: Colors.yellow[800],
                 floatingActionButtonIcon: AnimatedIcons.view_list,
                 showFloatingActionButton: true,
@@ -410,7 +406,7 @@ class _HomePage2State extends State<HomePage2> {
                   onDoubleTap: () {
                     // Update the state of the ap  .then((val)=>{_getRequests()})
                     Navigator.of(context).push(
-                        new MaterialPageRoute(builder: (_) => new NewsWebHomePage()));
+                        new MaterialPageRoute(builder: (_) => new NewsApp2()));
                   }),
             ],
           ),
@@ -660,45 +656,6 @@ class _HomePage2State extends State<HomePage2> {
     );
   }
 
-  Widget _circularMenu() {
-    return CircularMenu(
-      alignment: Alignment.bottomRight,
-      toggleButtonColor: Colors.pink,
-      items: [
-        CircularMenuItem(
-            icon: Icons.home,
-            color: Colors.green,
-            onTap: () {
-              setState(() {
-                _color = Colors.green;
-                _colorName = 'Green';
-              });
-              Navigator.of(context)
-                  .push(new MaterialPageRoute(builder: (_) => new Menu()));
-            }),
-        CircularMenuItem(
-            icon: Icons.settings,
-            color: Colors.orange,
-            onTap: () {
-              setState(() {
-                _color = Colors.orange;
-                _colorName = 'Orange';
-              });
-              Navigator.of(context).push(new MaterialPageRoute(
-                  builder: (_) => new Setting(prefs: prefs)));
-            }),
-        CircularMenuItem(
-            icon: Icons.notifications,
-            color: Colors.brown,
-            onTap: () {
-              setState(() {
-                _color = Colors.brown;
-                _colorName = 'Brown';
-              });
-            })
-      ],
-    );
-  }
 
   Widget _buildRow(IconData icon, String title, int navigation,
       {bool showBadge = false}) {
