@@ -56,27 +56,27 @@ class _StatesNewsState extends State<StatesNews>
                     indicatorColor: Color(widget.colorVal),
                     indicatorWeight: 5.0,
                     tabs: [
-                      Text("U.P",
+                      Text("Cricket",
                           style: TextStyle(
                               color: _tabController.index == 0
                                   ? Color(widget.colorVal)
                                   : Colors.black)),
-                      Text("Bihar",
+                      Text("Football",
                           style: TextStyle(
                               color: _tabController.index == 1
                                   ? Color(widget.colorVal)
                                   : Colors.black)),
-                      Text("Gujrat",
+                      Text("Hockey",
                           style: TextStyle(
                               color: _tabController.index == 2
                                   ? Color(widget.colorVal)
                                   : Colors.black)),
-                      Text("Mahrashtra",
+                      Text("Judo",
                           style: TextStyle(
                               color: _tabController.index == 3
                                   ? Color(widget.colorVal)
                                   : Colors.black)),
-                      Text("Jammu & Kashmir",
+                      Text("WWE",
                           style: TextStyle(
                               color: _tabController.index == 4
                                   ? Color(widget.colorVal)

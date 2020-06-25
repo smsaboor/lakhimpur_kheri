@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lakhimpur_kheri/screens/news/helper/newssetting2.dart';
+import 'package:lakhimpur_kheri/screens/news/views/newssetting2.dart';
 import 'package:url_launcher/url_launcher.dart';
 class BottomSheetMenu extends StatelessWidget {
   @override

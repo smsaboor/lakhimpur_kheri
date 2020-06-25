@@ -1,5 +1,4 @@
-import 'package:lakhimpur_kheri/screens/news/blocs/news_bloc.dart';
-import 'package:lakhimpur_kheri/screens/news/stream_builder_newsaapp.dart';
+
 import 'package:flutter/material.dart';
 
 ScrollController scrollControllerLikedList;
@@ -24,7 +23,7 @@ class GDriveDownloadsState extends State<GDriveDownloads> {
 
   @override
   Widget build(BuildContext context) {
-    bloc.fetchLikedNews();
+//    bloc.fetchLikedNews();
     return SafeArea(
       child: CustomScrollView(
         controller: scrollControllerLikedList,
@@ -46,7 +45,7 @@ class GDriveDownloadsState extends State<GDriveDownloads> {
               ),
             ),
           ),
-          streamBuilder(bloc.likeNews),
+//          streamBuilder(bloc.likeNews),
         ],
       ),
     );

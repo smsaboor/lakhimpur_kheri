@@ -1,3 +1,5 @@
+// use in splash screen for bording screen
+
 import 'package:lakhimpur_kheri/main.dart';
 import 'package:lakhimpur_kheri/route.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/Model/theme_model.dart';

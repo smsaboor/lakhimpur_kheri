@@ -25,7 +25,7 @@ class _AllHomePageState extends State<AllHomePage> {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             // backgroundColor: Color(0xff109618),
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.amber,
 //            title: Padding(
 //              padding: EdgeInsets.only(top: 8.0),
 //              child: _GooglePlayAppBar(),
@@ -33,7 +33,7 @@ class _AllHomePageState extends State<AllHomePage> {
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(10.0),
                 child: TabBar(
-                  labelColor: PrimaryColor,
+                  labelColor: Colors.black,
                   indicatorWeight: 4.0,
                   labelStyle: TextStyle(
                     fontSize: 14.0,

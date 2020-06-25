@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:folding_cell/folding_cell.dart';
-import 'package:lakhimpur_kheri/screens/homePage/dependency.dart';
+import 'package:lakhimpur_kheri/screens/HomePageFinall/homePage/dependency.dart';
 
 /// Example 1 folding cell inside [Container]
 class FoldingCellSimpleDemo extends StatelessWidget {

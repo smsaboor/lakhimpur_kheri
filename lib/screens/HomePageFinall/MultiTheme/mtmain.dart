@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:lakhimpur_kheri/model/model_localArticle.dart';
 import 'package:lakhimpur_kheri/model/model_localArticle.dart';
 import 'package:lakhimpur_kheri/model/model_note.dart';
+import 'package:lakhimpur_kheri/ruf2.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/Model/categoryModel.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/Model/productModel.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/Model/theme_model.dart';
@@ -12,22 +13,24 @@ import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/UI/settings.da
 import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/UI/settings.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/drawer/settings/profile_page.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/drawer/settings/settings_page.dart';
-import 'package:lakhimpur_kheri/screens/homePage/HomePage2.dart';
+import 'package:lakhimpur_kheri/screens/HomePageFinall/homePage/HomePage2.dart';
 import 'package:lakhimpur_kheri/helper/database_helper.dart';
 import 'package:lakhimpur_kheri/screens/health_n_fitness/fitness_app/fitness_app_home_screen.dart';
-import 'package:lakhimpur_kheri/screens/news/goals/app.dart';
+import 'package:lakhimpur_kheri/screens/news/aaa_outside_from_module/goals/app.dart';
 import 'package:lakhimpur_kheri/screens/news/news.dart';
+import 'package:lakhimpur_kheri/screens/shops/project1/userScreens/myHomePage.dart';
 import 'package:lakhimpur_kheri/utils/ml_kit/text_recognition.dart';
+import 'package:lakhimpur_kheri/utils/rss_feeds_nasa.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:lakhimpur_kheri/screens/homePage/dependency.dart';
-import 'package:lakhimpur_kheri/screens/homePage/slide_list_view.dart';
-import 'package:lakhimpur_kheri/screens/homePage/menu.dart';
+import 'package:lakhimpur_kheri/screens/HomePageFinall/homePage/dependency.dart';
+import 'package:lakhimpur_kheri/utils/slide_list_view.dart';
+import 'package:lakhimpur_kheri/screens/HomePageFinall/homePage/menu.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
-
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lakhimpur_kheri/login/authentication_bloc/authentication_bloc.dart';
 class MainUI extends StatefulWidget {
   final SharedPreferences prefs;
   ThemeModel model;
@@ -521,22 +524,10 @@ class _MainUIState extends State<MainUI> {
           _buildDivider(),
           GestureDetector(
             child: _buildRow(Icons.power_settings_new, "Logout", 7),
-            onTap: () async {
-              _gSignIn.signOut();
-              prefs?.setBool("islogin", false);
-              prefs?.setString("email", "logout");
-              prefs?.setString("name", "logout");
-              prefs?.setString("url", "logout");
-              _gSignIn.signOut();
-              if (prefs.getBool('homeFirst') == true) {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext ctx) => LoginScr(null)));
-              } else {
-                Navigator.pop(context, true);
-                Navigator.pop(context, true);
-              }
+            onTap: () {
+              BlocProvider.of<AuthenticationBloc>(context).add(
+                AuthenticationLoggedOut(),
+              );
             },
           ),
           _buildDivider(),
@@ -701,10 +692,8 @@ class _MainUIState extends State<MainUI> {
               children: <Widget>[
                 GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext ctx) => HomePage2()));
+                      Navigator.of(context).push(new MaterialPageRoute(
+                          builder: (_) => new SignInOne()));
                     },
                     child: Image.asset(
                       'assets/images/house.png',
@@ -751,17 +740,11 @@ class _MainUIState extends State<MainUI> {
               children: <Widget>[
                 GestureDetector(
                     onTap: () async{
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext ctx) => RSSDemo()));
                       //Navigator.of(context).pushNamed(FURNITURE_ITEM_LIST);
-                      updateListViewCIB();
-                      if(count==0)
-                      {
-                        int save= await databaseHelper.saveNote(ModelNote('job','it job available'));
-                        if(save!=0)
-                        {
-                          _showSnackBar(context, 'Article Save Successfully');
-
-                        }
-                      }
                       print('Routing to Furniture item list');
                       debugPrint("'Routing to Furniture item list :::$cashList");
                     },
@@ -784,6 +767,10 @@ class _MainUIState extends State<MainUI> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext ctx) => Project1HomePage()));
                     //Navigator.of(context).pushNamed(CARS_ITEM_LIST);
                     print('Routing to Cars item list');
                   },

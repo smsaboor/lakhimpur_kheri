@@ -38,7 +38,7 @@ canvas.drawRect(
         Rect.fromLTRB(
             width - (width / 3), 0,width, height),
         Paint()..color = transparentYellow);
-        
+
   }
 
   @override

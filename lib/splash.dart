@@ -35,27 +35,7 @@ class _SplashScrState extends State<SplashScr> {
   void initState(){
     super.initState();
     Timer(Duration(seconds: 3), (){
-      restore();
       checkFirstSeen();
-//      Navigator.of(context).pushReplacement(MaterialPageRoute(
-//        builder: (context) => RoutePage(model,prefs:prefs),
-//      ));
-    });
-  }
-  restore() async {
-    prefs = await SharedPreferences.getInstance();
-    String _email,_url,_name;
-    bool _islogin;
-    setState(() {
-      _islogin = (prefs.getBool('islogin') ?? false);
-      if(_islogin==false)
-      {
-        prefs?.setBool('islogin',false);
-        prefs?.setBool('homeFirst',false);
-        prefs?.setString('email','ASIS');
-        prefs?.setString('name','ASIS');
-        prefs?.setString('url','ASIS');
-      }
     });
   }
   // added test yourself

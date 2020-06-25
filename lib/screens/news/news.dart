@@ -1,29 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:lakhimpur_kheri/screens/news/views/card_view.dart';
+import 'package:lakhimpur_kheri/login/authentication_bloc/authentication_bloc.dart';
+import 'package:lakhimpur_kheri/model/article.dart';
 import 'package:lakhimpur_kheri/screens/news/bottom_menu_asGNews.dart';
-import 'package:lakhimpur_kheri/screens/news/helper/widgets.dart';
+import 'package:lakhimpur_kheri/screens/news/views/admin_news_save.dart';
+import 'package:lakhimpur_kheri/screens/news/views/card_view.dart';
+import 'package:lakhimpur_kheri/screens/news/views/widgets.dart';
 import 'package:lakhimpur_kheri/screens/news/models/news_model.dart';
-import 'package:lakhimpur_kheri/screens/news/top_ten_news/newsCard.dart';
+import 'package:lakhimpur_kheri/screens/news/aaa_outside_from_module/top_ten_news/newsCard.dart';
+import 'package:lakhimpur_kheri/screens/news/views/facebook_card_post.dart';
 import 'package:lakhimpur_kheri/screens/news/views/gallery_images_display.dart';
 import 'package:lakhimpur_kheri/screens/news/views/localDataView.dart';
+import 'package:lakhimpur_kheri/utils/zStatePicker/indianStates.dart';
+import 'package:lakhimpur_kheri/utils/zTehsilesPicker/Tehsiles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'helper/news.dart';
-import 'package:ff_navigation_bar/ff_navigation_bar.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'services/news.dart';
 import 'package:lakhimpur_kheri/screens/news/explore_news/homepage.dart';
-import 'top_ten_news/newsList.dart';
 import 'package:lakhimpur_kheri/model/model_localArticle.dart';
-
-//import 'package:firebase_mlkit_language/firebase_mlkit_language.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:lakhimpur_kheri/zCountryPicker/country.dart';
-import 'package:lakhimpur_kheri/zCountryPicker/country_pickers.dart';
-import 'package:lakhimpur_kheri/screens/news/a_news_app/ui/screens/serch_screen.dart';
-import 'package:http/http.dart' show Client;
+import 'package:lakhimpur_kheri/utils/zCountryPicker/country.dart';
+import 'package:lakhimpur_kheri/utils/zCountryPicker/country_pickers.dart';
+import 'package:lakhimpur_kheri/utils/zStatePicker/states.dart';
+import 'package:lakhimpur_kheri/utils/zStatePicker/states_pickers.dart';
+import 'package:lakhimpur_kheri/utils/zTehsilesPicker/Tehsil.dart';
+import 'package:lakhimpur_kheri/utils/zTehsilesPicker/tehsil_pickers.dart';
+
+import 'package:lakhimpur_kheri/screens/news/aaa_outside_from_module/a_news_app/ui/screens/serch_screen.dart';
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
 import 'package:lakhimpur_kheri/helper/database_helper.dart';
+import 'dart:io';
+import 'package:photo_view/photo_view_gallery.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:lakhimpur_kheri/utils/fullScreenWrapper.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 
 class NewsHome extends StatefulWidget {
   final SharedPreferences prefs;
@@ -48,6 +58,9 @@ class _NewsHomeState extends State<NewsHome> {
   ];
 
   String _countryIsoCodeSP = 'IN';
+  String _stateIsoCodeSP = 'S26';
+  String _tehsilIsoCodeSP = 'T1';
+
   Brightness _brightness;
   int color;
   String theme;
@@ -56,11 +69,14 @@ class _NewsHomeState extends State<NewsHome> {
   bool _newsloading, _firebaseloading, _localloading;
   int _currentPage;
   int selectedIndex = 0;
-
+  List<String> mystates = [];
+  List<String> mytehsils = [];
   List<Articles> newsList = [];
   List<Articles> firestoreList = [];
   List<ModelArticle> localArticalList = [];
   List<Articles> localArticalMapList = [];
+
+  List<Article> localArticalGoogleRSS = [];
   DataHelper databaseHelper = DataHelper();
   TabController tabController;
   TabController tabControllerLocal;
@@ -69,7 +85,8 @@ class _NewsHomeState extends State<NewsHome> {
 
 //Show hide Bottom and Appbar dependencies
   bool _showAppbar = true; //this is to show app bar
-  ScrollController _scrollBottomBarController = new ScrollController(); // set controller on scrolling
+  ScrollController _scrollBottomBarController =
+      new ScrollController(); // set controller on scrolling
   bool isScrollingDown = false;
   bool _show = true;
   double bottomBarHeight = 56; // set bottom bar height
@@ -77,6 +94,7 @@ class _NewsHomeState extends State<NewsHome> {
   int newsListLength;
   int firestoreListLength;
   int loacalArticleLength = 0;
+  String _uuid;
   String urlAll =
       "http://newsapi.org/v2/top-headlines?country=in&language=en&apiKey=ca8dea2ced7f40e6a26012eacad204ed";
 
@@ -89,6 +107,27 @@ class _NewsHomeState extends State<NewsHome> {
 //  String urlScience = "http://newsapi.org/v2/top-headlines?country=in&category=science&apiKey=${apiKey}";
 //  String urlSports = "http://newsapi.org/v2/top-headlines?country=in&category=sports&apiKey=${apiKey}";
 //  String urlTechnology = "http://newsapi.org/v2/top-headlines?country=in&category=technology&apiKey=${apiKey}";
+  static Future<List<Article>> getArticleListFromNetwork(
+      String country, String category) async {
+    if (category != null && category == 'local') {
+      return getLocalNewsFromNetwork();
+    }
+    return ApiService.getArticlesFromNetwork(country, category);
+  }
+
+  static Future<List<Article>> getLocalNewsFromNetwork() async {
+    return ApiService.getLocalNewsFromNetwork();
+  }
+
+  bool _googleLoading;
+
+  void getGoogleNews() async {
+    localArticalGoogleRSS = await ApiService.getLocalNewsFromNetwork();
+    setState(() {
+      _googleLoading = false;
+    });
+  }
+
   void getNews() async {
     NewsApiProvider2 news = NewsApiProvider2();
     await news.getNews(urlAll);
@@ -100,9 +139,11 @@ class _NewsHomeState extends State<NewsHome> {
   }
 
   void firestoreNews() async {
+    debugPrint("firestore news is called...................$_uuid");
     NewsApiProvider2 news = NewsApiProvider2();
-    await news.getFavoriteNews();
+    await news.getFavoriteNews(_uuid);
     firestoreList = news.list2;
+    debugPrint("firestoreList length...............${firestoreList.length}...");
     firestoreListLength = firestoreList.length;
     setState(() {
       _firebaseloading = false;
@@ -125,12 +166,49 @@ class _NewsHomeState extends State<NewsHome> {
     });
   }
 
+  Future<bool> checkForInternet() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } on SocketException catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text(message),
+        duration: Duration(seconds: 3));
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+  bool checkForNet;
+  checkforinternet() async {
+    checkForNet = await checkForInternet();
+    if (checkForNet != true) {
+      _showSnackBar(context, 'No Internet Connection');
+    } else {
+      getNews();
+      firestoreNews();
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     restore();
+    restore2();
+    firestoreNews();
+    getGoogleNews();
+    checkforinternet();
     updateLoacalListView();
+    _googleLoading = true;
     _newsloading = true;
     _firebaseloading = true;
     _localloading = true;
@@ -138,10 +216,7 @@ class _NewsHomeState extends State<NewsHome> {
     colorselected = Colors.pink;
     myScroll();
     _currentPage = 0;
-    getNews();
-    firestoreNews();
-
-//    Timer(Duration(seconds: 30), (){
+    //    Timer(Duration(seconds: 30), (){
 //      internetInfo=" sorry your net speed is very slow !";
 //    });
   }
@@ -179,13 +254,33 @@ class _NewsHomeState extends State<NewsHome> {
     });
   }
 
+  restore2() {
+    mytehsils.add('assets/t00.jpg');
+    for (int i = 0; i < tehsilList.length; i++) {
+      debugPrint("tehsil-----------------------${tehsilList.length}");
+      mytehsils
+          .add(TehsilPickerUtils.getFlagImageAssetPath(tehsilList[i].isoCode));
+      debugPrint("tehsil--$i is---------------------${mytehsils[i]}");
+    }
+  }
+
   restore() async {
     final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     setState(() {
+      _uuid = (sharedPrefs.getString('uuId') ?? '');
+    });
+    mystates.add('assets/s0.jpg');
+    for (int i = 0; i <= statesList.length; i++) {
+      debugPrint("tehsil-----------------------${tehsilList.length}");
+      mystates
+          .add(StatePickerUtils.getFlagImageAssetPath(statesList[i].isoCode));
+    }
+    setState(() {
       _countryIsoCodeSP = (sharedPrefs.getString('countryIsoCode') ?? 'IN');
+      _stateIsoCodeSP = (sharedPrefs.getString('stateIsoCode') ?? 'S26');
+      _tehsilIsoCodeSP = (sharedPrefs.getString('tehsilIsoCode') ?? 'T1');
     });
   }
-
   save(String key, dynamic value) async {
     final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     if (value is String) {
@@ -207,25 +302,73 @@ class _NewsHomeState extends State<NewsHome> {
     return BottomNavigationBar(
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-            icon: Icon(Icons.local_library), title: Text('For You')),
+            icon: Padding(
+              padding: EdgeInsets.only(bottom: 5),
+              child: Icon(Icons.local_library),
+            ),
+            title: Text(
+              'For You',
+              style: TextStyle(color: Colors.black),
+            )),
         BottomNavigationBarItem(
-          icon: Icon(Icons.language),
-          title: Text('World'),
+          icon: Padding(
+            padding: EdgeInsets.only(bottom: 5),
+            child: Icon(Icons.language),
+          ),
+          title: Text(
+            'World',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         BottomNavigationBarItem(
-            icon: Icon(Icons.location_on), title: Text('Local')),
+            icon: Padding(
+              padding: EdgeInsets.only(bottom: 5),
+              child: Icon(Icons.flag),
+            ),
+            title: Text(
+              'National',
+              style: TextStyle(color: Colors.black),
+            )),
+//        BottomNavigationBarItem(
+//          icon: Padding(
+//            padding: EdgeInsets.only(bottom: 5),
+//            child: Icon(Icons.location_city),
+//          ),
+//          title: Text(
+//            'City',
+//            style: TextStyle(color: Colors.black),
+//          ),
+//        ),
+
         BottomNavigationBarItem(
-            icon: Icon(Icons.explore), title: Text('Explore')),
+          icon: Padding(
+            padding: EdgeInsets.only(bottom: 5),
+            child: Icon(Icons.location_on),
+          ),
+          title: Text(
+            'Local',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.bookmark),
-          title: Text('Saved'),
-        )
+            icon: Padding(
+              padding: EdgeInsets.only(bottom: 5),
+              child: Icon(Icons.explore),
+            ),
+            title: Text(
+              'Explore',
+              style: TextStyle(color: Colors.black),
+            )),
       ],
       currentIndex: selectedIndex,
       type: BottomNavigationBarType.fixed,
+      selectedItemColor: Colors.amber,
+      iconSize: 22,
+      selectedFontSize: 13,
+      unselectedFontSize: 12,
       unselectedItemColor: Colors.black54,
+      showSelectedLabels: true,
       showUnselectedLabels: true,
-      selectedItemColor: Colors.red,
       onTap: (index) {
         debugPrint("index===========$index");
         setState(() {
@@ -259,9 +402,9 @@ class _NewsHomeState extends State<NewsHome> {
               backgroundColor: Colors.white,
               leading: IconButton(
                 icon: Icon(
-                  Icons.search,
+                  Icons.language,
                   semanticLabel: 'search',
-                  color: Colors.red,
+                  color: Colors.amber,
                 ),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -271,11 +414,22 @@ class _NewsHomeState extends State<NewsHome> {
               ),
               actions: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(right: 6.0),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.notifications_active,
+                      size: 24.0,
+                      color: Colors.black54,
+                    ),
+                    onPressed: () {
+                      _modalMenu();
+                    },
+                  ),
+                ),
+                Container(
                   child: IconButton(
                     icon: Icon(
                       Icons.account_circle,
-                      size: 32.0,
+                      size: 24.0,
                       color: Colors.black54,
                     ),
                     onPressed: () {
@@ -291,125 +445,286 @@ class _NewsHomeState extends State<NewsHome> {
             body: NewsCard());
       case 1:
         return DefaultTabController(
-          length: 10,
+          length: 5,
           child: new Scaffold(
-            body: new NestedScrollView(
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  new SliverAppBar(
-                    automaticallyImplyLeading: false,
-                    elevation: 0.0,
-                    backgroundColor: colorselected,
-                    title: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          title(
-                              CountryPickerUtils.getCountryByIsoCode(
-                                      _countryIsoCodeSP)
-                                  .name,
-                              "News               "),
-                          GestureDetector(
-                              child: Row(
-                                children: <Widget>[
-                                  Image.asset(
-                                      CountryPickerUtils.getFlagImageAssetPath(
-                                          _countryIsoCodeSP),
-                                      height: 20,
-                                      width: 35),
-                                  Icon(
-                                    Icons.arrow_drop_down,
-                                    size: 25,
-                                  )
-                                ],
+              backgroundColor: Colors.grey.shade100,
+              body: new NestedScrollView(
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
+                    return <Widget>[
+                      new SliverAppBar(
+                        title: GestureDetector(
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(right: 6),
+                                  child: Icon(
+                                    Icons.language,
+                                    color: Colors.amber,
+                                    size: 34,
+                                  ),
+                                ),
+                                title(
+                                    CountryPickerUtils.getCountryByIsoCode(
+                                            _countryIsoCodeSP)
+                                        .name,
+                                    "News"),
+                                Icon(
+                                  Icons.arrow_drop_down,
+                                  size: 25,
+                                  color: Colors.black,
+                                )
+                              ],
+                            ),
+                            onTap: () {
+                              _openCountryPickerDialog()
+                                  .then((val) => refereshNews());
+                            }),
+                        actions: <Widget>[
+                          Container(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.file_download,
+                                size: 24.0,
+                                color: Colors.red,
                               ),
-                              onTap: () {
-                                _openCountryPickerDialog()
-                                    .then((val) => refereshNews());
-                              })
-                        ]),
-                    floating: true,
-                    pinned: true,
-                    snap: true,
-                    expandedHeight: 150,
-                    flexibleSpace: FlexibleSpaceBar(
-                      background:
-                          Image.asset('assets/images/b5.jpg', fit: BoxFit.fill),
-                    ),
-                    bottom: TabBarWorld(),
-                  ),
-                ];
-              },
-              body: _tabBarViewWorld(),
-            ),
-            bottomNavigationBar:bottomNavbar()
-          ),
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      _getDownload(),
+                                ));
+
+                              },
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(right: 6.0),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.account_circle,
+                                size: 24.0,
+                                color: Colors.black54,
+                              ),
+                              onPressed: () {
+                                _modalMenu();
+                              },
+                            ),
+                          ),
+                        ],
+                        automaticallyImplyLeading: false,
+                        elevation: 4.0,
+                        backgroundColor: Colors.white,
+                        floating: true,
+                        pinned: true,
+                        snap: true,
+                        bottom: TabBarWorld(),
+                      ),
+                    ];
+                  },
+                  body: _tabBarViewWorld()),
+              bottomNavigationBar: bottomNavbar()),
         );
       case 2:
         return DefaultTabController(
+          length: 5,
+          child: new Scaffold(
+              backgroundColor: Colors.grey.shade100,
+              body: new NestedScrollView(
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
+                    return <Widget>[
+                      new SliverAppBar(
+                        title: GestureDetector(
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(right: 6),
+                                  child: Icon(
+                                    Icons.language,
+                                    color: Colors.amber,
+                                    size: 34,
+                                  ),
+                                ),
+                                title(
+                                    StatePickerUtils.getStateByIsoCode(
+                                        _stateIsoCodeSP)
+                                        .name,
+                                    "News"),
+                                Icon(
+                                  Icons.arrow_drop_down,
+                                  size: 25,
+                                  color: Colors.black,
+                                )
+                              ],
+                            ),
+                            onTap: () {
+                              _openStatePickerDialog()
+                                  .then((val) => refereshNews());
+                            }),
+                        actions: <Widget>[
+                          Container(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.file_download,
+                                size: 24.0,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      _getDownload(),
+                                ));
+
+                              },
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(right: 6.0),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.account_circle,
+                                size: 24.0,
+                                color: Colors.black54,
+                              ),
+                              onPressed: () {
+                                _modalMenu();
+                              },
+                            ),
+                          ),
+                        ],
+                        automaticallyImplyLeading: false,
+                        elevation: 4.0,
+                        backgroundColor: Colors.white,
+                        floating: true,
+                        pinned: true,
+                        snap: true,
+                        bottom: TabBarNational(),
+                      ),
+                    ];
+                  },
+                  body: _tabBarViewNational()),
+              bottomNavigationBar: bottomNavbar()),
+        );
+      case 3:
+        return DefaultTabController(
           length: 8,
           child: new Scaffold(
-            body: new NestedScrollView(
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  new SliverAppBar(
-                    automaticallyImplyLeading: false,
-                    backgroundColor: colorselected,
-                    title: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          title("Local", "News               "),
-                          GestureDetector(
+              backgroundColor: Colors.white,
+              body: new NestedScrollView(
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
+                    return <Widget>[
+                      new SliverAppBar(
+                          title: GestureDetector(
                               child: Row(
                                 children: <Widget>[
-                                  Image.asset(
-                                      CountryPickerUtils.getFlagImageAssetPath(
-                                          _countryIsoCodeSP),
-                                      height: 20,
-                                      width: 35),
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 6),
+                                    child: Icon(
+                                      Icons.language,
+                                      color: Colors.amber,
+                                      size: 34,
+                                    ),
+                                  ),
+                                  title(
+                                      TehsilPickerUtils.getTehsilByIsoCode(
+                                              _tehsilIsoCodeSP)
+                                          .name,
+                                      "News"),
                                   Icon(
                                     Icons.arrow_drop_down,
                                     size: 25,
+                                    color: Colors.black,
                                   )
                                 ],
                               ),
                               onTap: () {
-                                _openCountryPickerDialog()
+                                _openTehsilPickerDialog()
                                     .then((val) => refereshNews());
-                              })
-                        ]),
+                              }),
+                          actions: <Widget>[
+                            Container(
+                              child:IconButton(
+                                  icon: Icon(
+                                    Icons.file_download,
+                                    size: 24.0,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          _getDownload(),
+                                    ));
+
+                                  },
+                                ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(right: 6.0),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.account_circle,
+                                  size: 24.0,
+                                  color: Colors.black54,
+                                ),
+                                onPressed: () {
+                                  _modalMenu();
+                                },
+                              ),
+                            ),
+                          ],
+                          automaticallyImplyLeading: false,
+                          elevation: 4.0,
+                          backgroundColor: Colors.white,
+                          floating: true,
+                          pinned: true,
+                          snap: true,
+                          bottom: TabBarLocal())
+                    ];
+                  },
+                  body: _tabBarViewLocal()),
+              bottomNavigationBar: bottomNavbar()),
+        );
+      case 4:
+        return Scaffold(
+            backgroundColor: Colors.white,
+            bottomNavigationBar: bottomNavbar(),
+            body: AllHomePage());
+    }
+  }
+_getDownload(){
+  return DefaultTabController(
+    length: 4,
+    child: new Scaffold(
+        backgroundColor: Colors.white,
+        body: new NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                new SliverAppBar(
+                  leading: GestureDetector(child: Icon(Icons.arrow_back,color: Colors.black,),
+                  onTap: (){
+                    Navigator.pop(context,true);
+                  },),
+                    title: Row(
+                          children: <Widget>[
+                            title(
+                               "Downloads",
+                                "News"),
+                          ],
+                    ),
+                    elevation: 4.0,
+                    backgroundColor: Colors.white,
                     floating: true,
                     pinned: true,
                     snap: true,
-                    expandedHeight: 90,
-                    bottom: TabBarLocal(),
-                  ),
-                ];
-              },
-              body: _tabBarViewLocal(),
-            ),
-            bottomNavigationBar:  bottomNavbar()
-          ),
-        );
-      case 3:
-        return Scaffold(
-            bottomNavigationBar: bottomNavbar(), body: AllHomePage());
-      case 4:
-        return DefaultTabController(
-            length: 4,
-            child: Scaffold(
-                appBar: _showAppbar
-                    ? MyAppBarDownloads()
-                    : PreferredSize(
-                        child: Container(),
-                        preferredSize: Size(0.0, 0.0),
-                      ),
-                bottomNavigationBar: bottomNavbar(),
-                body: _tabBarViewsDownload()));
-    }
-  }
-
+                    bottom: MyAppBarDownloads())
+              ];
+            },
+            body: _tabBarViewsDownload()),
+    ),
+  );
+}
   Widget TabBarWorld() {
     return TabBar(
       labelColor: Colors.black,
@@ -418,41 +733,71 @@ class _NewsHomeState extends State<NewsHome> {
         fontWeight: FontWeight.bold,
         color: Colors.black,
       ),
-      unselectedLabelColor: Colors.white,
+      unselectedLabelColor: Colors.black54,
       indicatorSize: TabBarIndicatorSize.tab,
       indicatorWeight: 4,
-      indicatorColor: Colors.blueGrey,
-      indicator: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-          color: Colors.white70),
+      indicatorColor: Colors.amber,
+//      indicator: BoxDecoration(
+//          borderRadius: BorderRadius.only(
+//              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+//          color: Colors.white70),
       isScrollable: true,
       tabs: [
-        Tabs("Latest"),
+        Tabs("Hot News"),
         Tabs("Jobs"),
-        Tabs("Education"),
         Tabs("Business"),
-        Tabs("Entertainment"),
-        Tabs("General"),
-        Tabs("Health"),
-        Tabs("Science"),
-        Tabs("Sports"),
-        Tabs("Technology"),
+        Tabs("Politics"),
+        Tabs("Education"),
       ],
       controller: tabController,
     );
   }
 
-  TabBarView _tabBarViewWorld() {
+  Widget _tabBarViewWorld() {
     debugPrint("in ........................_tabBarView");
     return TabBarView(controller: tabController, children: [
       _safeAreaForCategory(newsList, _newsloading, newsListLength),
+      _safeAreaForCategory3(
+          localArticalGoogleRSS, _googleLoading, localArticalGoogleRSS.length),
       Container(),
       Container(),
       Container(),
-      Container(),
-      Container(),
-      Container(),
+    ]);
+  }
+  Widget TabBarNational() {
+    return TabBar(
+      labelColor: Colors.black,
+      labelStyle: TextStyle(
+        fontSize: 13.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      unselectedLabelColor: Colors.black54,
+      indicatorSize: TabBarIndicatorSize.tab,
+      indicatorWeight: 4,
+      indicatorColor: Colors.amber,
+//      indicator: BoxDecoration(
+//          borderRadius: BorderRadius.only(
+//              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+//          color: Colors.white70),
+      isScrollable: true,
+      tabs: [
+        Tabs("Hot News"),
+        Tabs("Jobs"),
+        Tabs("Business"),
+        Tabs("Politics"),
+        Tabs("Education"),
+      ],
+      controller: tabController,
+    );
+  }
+
+  Widget _tabBarViewNational() {
+    debugPrint("in ........................_tabBarView");
+    return TabBarView(controller: tabController, children: [
+      _safeAreaForCategory(newsList, _newsloading, newsListLength),
+      _safeAreaForCategory3(
+          localArticalGoogleRSS, _googleLoading, localArticalGoogleRSS.length),
       Container(),
       Container(),
       Container(),
@@ -466,24 +811,24 @@ class _NewsHomeState extends State<NewsHome> {
         fontWeight: FontWeight.bold,
         color: Colors.black,
       ),
-      unselectedLabelColor: Colors.white,
+      unselectedLabelColor: Colors.black54,
       labelColor: Colors.black,
       indicatorSize: TabBarIndicatorSize.tab,
       indicatorWeight: 4,
-      indicatorColor: Colors.red,
-      indicator: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-          color: Colors.white70),
+      indicatorColor: Colors.amber,
+//      indicator: BoxDecoration(
+//          borderRadius: BorderRadius.only(
+//              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+//          color: Colors.white70),
       isScrollable: true,
       tabs: [
-        Tabs("All"),
-        Tabs("Offers"),
+        Tabs("Hot News"),
         Tabs("Jobs"),
         Tabs("Education"),
-        Tabs("Anouncement"),
+        Tabs("Offers"),
         Tabs("Sports"),
-        Tabs("Important"),
+        Tabs(" , ,. "),
+        Tabs("Spo"),
         Tabs("Sales"),
       ],
       controller: tabControllerLocal,
@@ -493,7 +838,7 @@ class _NewsHomeState extends State<NewsHome> {
   TabBarView _tabBarViewLocal() {
     debugPrint("in ........................_tabBarView");
     return TabBarView(controller: tabControllerLocal, children: [
-      Container(),
+      _getCardViewForAdmin(newsList, _newsloading, newsListLength),
       Container(),
       Container(),
       Container(),
@@ -505,35 +850,24 @@ class _NewsHomeState extends State<NewsHome> {
   }
 
   MyAppBarDownloads() {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: title("Downloaded", "News"),
-      elevation: 4,
-      backgroundColor: Colors.red,
-      bottom: TabBar(
-        labelColor: Colors.black,
-        labelStyle: TextStyle(
-          fontSize: 13.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-        unselectedLabelColor: Colors.white,
-        indicatorSize: TabBarIndicatorSize.tab,
-        indicatorWeight: 2,
-        indicatorColor: Colors.red,
-        isScrollable: true,
-        indicator: BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-            color: Colors.white70),
-        tabs: [
-          Tabs("Local"),
-          Tabs("Cloud"),
-          Tabs("G-Drive"),
-          Tabs("Gallery"),
-        ],
-        controller: tabControllerDownloads,
+    return TabBar(
+      labelStyle: TextStyle(
+        fontSize: 13.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
       ),
+      unselectedLabelColor: Colors.black54,
+      labelColor: Colors.black,
+      indicatorSize: TabBarIndicatorSize.tab,
+      indicatorWeight: 4,
+      indicatorColor: Colors.amber,
+      tabs: [
+        Tabs("offline"),
+        Tabs("Cloud"),
+        Tabs("G-Drive"),
+        Tabs("Gallery"),
+      ],
+      controller: tabControllerDownloads,
     );
   }
 
@@ -544,15 +878,45 @@ class _NewsHomeState extends State<NewsHome> {
       _safeAreaForCategory(
           firestoreList, _firebaseloading, firestoreListLength),
       Container(),
-      Container(child:GalleryImagesDisplay()),
+      Container(child: GalleryImagesDisplay()),
     ]);
   }
 
-  Widget _buildDialogItem(Country country) => Row(
+
+  Widget _buildCountryDialogItem(Country country) => Row(
         children: <Widget>[
           CountryPickerUtils.getDefaultFlagImage(country),
           SizedBox(width: 12.0),
           Flexible(child: Text(country.name))
+        ],
+      );
+
+  Widget _buildStateDialogItem(IndianStates state) => Row(
+        children: <Widget>[
+          StatePickerUtils.getDefaultFlagImage(state),
+          SizedBox(width: 8.0),
+          Flexible(
+              child: Text(
+            state.name,
+            style: TextStyle(fontSize: 16),
+          )),
+          Text(
+            " (${state.stateCapital})",
+            style: TextStyle(fontSize: 10, color: Colors.green),
+          ),
+//      Text("'${state.foundedOn}'",style: TextStyle(fontSize: 6),)
+        ],
+      );
+
+  Widget _buildTehsilDialogItem(Tehsil tehsil) => Row(
+        children: <Widget>[
+          TehsilPickerUtils.getTehsilDefaultFlagImage(tehsil),
+          SizedBox(width: 12.0),
+          Flexible(child: Text(tehsil.name)),
+          Text(
+            " (${tehsil.area})",
+            style: TextStyle(fontSize: 10, color: Colors.green),
+          ),
         ],
       );
 
@@ -565,17 +929,145 @@ class _NewsHomeState extends State<NewsHome> {
             searchCursorColor: Colors.pinkAccent,
             searchInputDecoration: InputDecoration(hintText: 'Search...'),
             isSearchable: true,
-            title: Text('Select your phone code'),
+            title: Text('Select Your Country'),
             onValuePicked: (Country country) {
               setState(() {
                 _countryIsoCodeSP = country.isoCode;
               });
               save('countryIsoCode', country.isoCode);
             },
-            itemBuilder: _buildDialogItem,
+            itemBuilder: _buildCountryDialogItem,
             priorityList: [
+              CountryPickerUtils.getCountryByIsoCode('A0'),
               CountryPickerUtils.getCountryByIsoCode('IN'),
               CountryPickerUtils.getCountryByIsoCode('US'),
+              CountryPickerUtils.getCountryByIsoCode('CN'),
+            ],
+          ),
+        ),
+      );
+
+  Future<void> _openStatePickerDialog() => showDialog(
+        context: context,
+        builder: (context) => Theme(
+          data: Theme.of(context).copyWith(primaryColor: Colors.pink),
+          child: IndianStatePickerDialog(
+            titlePadding: EdgeInsets.all(8.0),
+            searchCursorColor: Colors.pinkAccent,
+            searchInputDecoration: InputDecoration(hintText: 'Search...'),
+            isSearchable: true,
+            title: Row(
+              children: <Widget>[
+                Text('Select Your State'),
+                Spacer(),
+                InkWell(
+                    onTap: () {
+                      Navigator.pop(context, true);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GalleryPhotoViewWrapper(
+                            galleryItems: mystates,
+                            initialIndex: 0,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset(
+                          StatePickerUtils.getFlagImageAssetPath('s0'),
+                          height: 50,
+                          width: 40,
+                        ),
+                        Text(
+                          "open Map",
+                          style: TextStyle(fontSize: 9, color: Colors.red),
+                        )
+                      ],
+                    ))
+              ],
+            ),
+            onValuePicked: (IndianStates state) {
+              setState(() {
+                _stateIsoCodeSP = state.isoCode;
+              });
+              save('stateIsoCode', state.isoCode);
+            },
+            itemBuilder: _buildStateDialogItem,
+            priorityList: [
+              StatePickerUtils.getStateByIsoCode('S0'),
+              StatePickerUtils.getStateByIsoCode('S26'),
+            ],
+          ),
+        ),
+      );
+
+  Future<void> _openTehsilPickerDialog() => showDialog(
+        context: context,
+        builder: (context) => Theme(
+          data: Theme.of(context).copyWith(primaryColor: Colors.pink),
+          child: TehsilesPickerDialog(
+            titlePadding: EdgeInsets.all(8.0),
+            searchCursorColor: Colors.pinkAccent,
+            searchInputDecoration: InputDecoration(hintText: 'Search...'),
+            isSearchable: true,
+            title: Column(
+              children: <Widget>[
+//                Text(
+//                  'Lakhimpur-Kheri: 7680 km²',
+//                  style: TextStyle(fontSize: 10, color: Colors.red),
+//                ),
+                Row(
+                  children: <Widget>[
+                    Text('Select Your Tehsil'),
+                    Spacer(),
+                    InkWell(
+                        onTap: () {
+                          Navigator.pop(context, true);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GalleryPhotoViewWrapper(
+                                galleryItems: mytehsils,
+                                initialIndex: 0,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            Image.asset(
+                              TehsilPickerUtils.getFlagImageAssetPath('t0'),
+                              height: 50,
+                              width: 60,
+                            ),
+                            Text(
+                              "open Map",
+                              style: TextStyle(fontSize: 9, color: Colors.red),
+                            )
+                          ],
+                        ))
+                  ],
+                ),
+//                RaisedButton(
+//                  color: Colors.amber,
+//                  child: Text("Cancel"),
+//                onPressed: (){
+//                  Navigator.pop(context, true);
+//                },
+//                ),
+              ],
+            ),
+            onValuePicked: (Tehsil tehsil) {
+              setState(() {
+                _tehsilIsoCodeSP = tehsil.isoCode;
+              });
+              save('tehsilIsoCode', tehsil.isoCode);
+            },
+            itemBuilder: _buildTehsilDialogItem,
+            priorityList: [
+              TehsilPickerUtils.getTehsilByIsoCode('T0'),
             ],
           ),
         ),
@@ -592,17 +1084,137 @@ class _NewsHomeState extends State<NewsHome> {
     getNews();
     _getScaffold(selectedIndex);
   }
+
   Future refereshLocal() async {
     debugPrint("referesh is called...............................");
     updateLoacalListView();
     _getScaffold(selectedIndex);
   }
 
+  _safeAreaForCategory(List<Articles> newslistCategoryall, bool loading, int length) {
+    return RefreshIndicator(
+      backgroundColor: Colors.black,
+      onRefresh: refereshNews,
+      child: loading
+          ? Center(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                  CircularProgressIndicator(
+                    backgroundColor: Colors.black,
+                  ),
+                  Text("Waiting for news to load..."),
+                ]))
+          : Container(
+              child: ListView.builder(
+                  itemCount: newslistCategoryall.length,
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                        padding: EdgeInsets.only(left: 8, right: 8),
+                        child: CardView(
+                          source: newslistCategoryall[index].source.name ??
+                              'Sorry !',
+                          title: newslistCategoryall[index].title ?? 'Sorry !',
+                          url: newslistCategoryall[index].url ?? 'Sorry !',
+                          urlToImage: newslistCategoryall[index].urlToImage ??
+                              'Sorry !',
+                          author: newslistCategoryall[index].author ??
+                              'Author Unavailable',
+                          publishedAt:
+                              newslistCategoryall[index].publishedAt ?? 'Sorry',
+                          content:
+                              newslistCategoryall[index].content ?? 'Sorry',
+                        ));
+                  }),
+            ),
+    );
+  }
 
-
-  _safeAreaForCategory(
+  _getCardViewForAdmin(
       List<Articles> newslistCategoryall, bool loading, int length) {
-//    print(newslistCategoryall[0].source.name.runtimeType);
+    return RefreshIndicator(
+      backgroundColor: Colors.black,
+      onRefresh: refereshNews,
+      child: loading
+          ? Center(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                  CircularProgressIndicator(
+                    backgroundColor: Colors.black,
+                  ),
+                  Text("Waiting for news to load..."),
+                ]))
+          : Container(
+              child: ListView.builder(
+                  itemCount: newslistCategoryall.length,
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                        padding: EdgeInsets.only(left: 8, right: 8),
+                        child: AdminNewsCard(
+                          source: newslistCategoryall[index].source.name ??
+                              'Sorry !',
+                          title: newslistCategoryall[index].title ?? 'Sorry !',
+                          url: newslistCategoryall[index].url ?? 'Sorry !',
+                          urlToImage: newslistCategoryall[index].urlToImage ??
+                              'Sorry !',
+                          author: newslistCategoryall[index].author ??
+                              'Author Unavailable',
+                          publishedAt:
+                              newslistCategoryall[index].publishedAt ?? 'Sorry',
+                          content:
+                              newslistCategoryall[index].content ?? 'Sorry',
+                        ));
+                  }),
+            ),
+    );
+  }
+
+  _safeAreaForCategory2(
+      List<ModelArticle> newslistCategoryall, bool loading, int length) {
+    return RefreshIndicator(
+      backgroundColor: Colors.black,
+      onRefresh: refereshLocal,
+      child: loading
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                  CircularProgressIndicator(
+                    backgroundColor: Colors.black,
+                  ),
+                  Text("Waiting for news to load..."),
+                ])
+          : Container(
+              child: ListView.builder(
+                  itemCount: newslistCategoryall.length,
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return LocalDataView(
+                      title: newslistCategoryall[index].title,
+                      url: newslistCategoryall[index].url,
+                      author: newslistCategoryall[index].author,
+                      source: newslistCategoryall[index].source,
+                      urlToImage: newslistCategoryall[index].imageToUrl,
+                      publishedAt: newslistCategoryall[index].publishedAt,
+                      content: newslistCategoryall[index].content,
+                      category: 'all',
+                    );
+                  }),
+            ),
+    );
+  }
+
+  _safeAreaForCategory3(
+      List<Article> newslistCategoryall, bool loading, int length) {
+    debugPrint("@@@@@@@@@@@@@@@@@@@@@@@@@@@${newslistCategoryall[1].imageUrl}");
     return Container(
         child: RefreshIndicator(
             backgroundColor: Colors.black,
@@ -625,97 +1237,144 @@ class _NewsHomeState extends State<NewsHome> {
                         child: Column(
                           children: <Widget>[
                             Text("Total Result=$length"),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 12.0, right: 12),
-                              child: Container(
-                                child: ListView.builder(
-                                    itemCount: newslistCategoryall.length,
-                                    shrinkWrap: true,
-                                    physics: ClampingScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return CardView(
-                                        title: newslistCategoryall[index].title,
-                                        url: newslistCategoryall[index].url,
-                                        author:
-                                            newslistCategoryall[index].author,
-                                        source: newslistCategoryall[index]
-                                            .source
-                                            .name,
-                                        urlToImage: newslistCategoryall[index]
-                                            .urlToImage,
-                                        publishedAt: newslistCategoryall[index]
-                                            .publishedAt,
-                                        content:
-                                            newslistCategoryall[index].content,
-                                        category: 'all',
-                                      );
-                                    }),
-                              ),
-                            )
+                            Container(
+                              child: ListView.builder(
+                                  itemCount: newslistCategoryall.length,
+                                  shrinkWrap: true,
+                                  physics: ClampingScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return FacebookCardPost(
+                                      source:
+                                          newslistCategoryall[index].source ??
+                                              'Sorry !',
+                                      title: newslistCategoryall[index].title ??
+                                          'Sorry !',
+                                      url: newslistCategoryall[index].url ??
+                                          'Sorry !',
+                                      urlToImage:
+                                          newslistCategoryall[index].imageUrl ??
+                                              'Sorry !',
+                                      author:
+                                          newslistCategoryall[index].author ??
+                                              'Author Unavailable',
+                                      publishedAt: newslistCategoryall[index]
+                                              .publishedAt ??
+                                          'Sorry',
+                                      content:
+                                          newslistCategoryall[index].content ??
+                                              'Sorry',
+                                    );
+                                  }),
+                            ),
                           ],
                         ),
                       ),
                     ),
             ))));
   }
+}
 
-  _safeAreaForCategory2(
-      List<ModelArticle> newslistCategoryall, bool loading, int length) {
-//    print(newslistCategoryall[0].source.name.runtimeType);
-    return Container(
-        child: RefreshIndicator(
-            backgroundColor: Colors.black,
-            onRefresh: refereshLocal,
-            child: Center(
-                child: Container(
-              child: loading
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                          CircularProgressIndicator(
-                            backgroundColor: Colors.black,
-                          ),
-                          Text("Waiting for news to load..."),
-                        ])
-                  : SingleChildScrollView(
-                      controller: _scrollBottomBarController,
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Text("Total Downloads=$length"),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 12.0, right: 12),
-                              child: Container(
-                                child: ListView.builder(
-                                    itemCount: newslistCategoryall.length,
-                                    shrinkWrap: true,
-                                    physics: ClampingScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return LocalDataView(
-                                        title: newslistCategoryall[index].title,
-                                        url: newslistCategoryall[index].url,
-                                        author:
-                                            newslistCategoryall[index].author,
-                                        source:
-                                            newslistCategoryall[index].source,
-                                        urlToImage: newslistCategoryall[index]
-                                            .imageToUrl,
-                                        publishedAt: newslistCategoryall[index]
-                                            .publishedAt,
-                                        content:
-                                            newslistCategoryall[index].content,
-                                        category: 'all',
-                                      );
-                                    }),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-            ))));
+class GalleryPhotoViewWrapper extends StatefulWidget {
+  GalleryPhotoViewWrapper({
+    this.loadingBuilder,
+    this.initialIndex,
+    @required this.galleryItems,
+    this.scrollDirection = Axis.horizontal,
+  }) : pageController = PageController(initialPage: initialIndex);
+  final LoadingBuilder loadingBuilder;
+
+  final int initialIndex;
+  final PageController pageController;
+  final List<String> galleryItems;
+  final Axis scrollDirection;
+
+  Decoration backgroundDecoration = const BoxDecoration(
+    color: Colors.black,
+  );
+
+  @override
+  State<StatefulWidget> createState() {
+    return _GalleryPhotoViewWrapperState();
+  }
+}
+
+class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
+  int currentIndex;
+
+  @override
+  void initState() {
+    currentIndex = widget.initialIndex;
+    super.initState();
+  }
+
+  void onPageChanged(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    for (int i = 0; i < widget.galleryItems.length; i++)
+      debugPrint("???????????????????????? ${widget.galleryItems[i]}");
+    return Scaffold(
+      body: Container(
+        constraints: BoxConstraints.expand(
+          height: MediaQuery.of(context).size.height,
+        ),
+        child: Stack(
+          alignment: Alignment.bottomRight,
+          children: <Widget>[
+            PhotoViewGallery.builder(
+              scrollPhysics: const BouncingScrollPhysics(),
+              builder: _buildItem,
+              itemCount: widget.galleryItems.length,
+              loadingBuilder: widget.loadingBuilder,
+              backgroundDecoration: widget.backgroundDecoration,
+              pageController: widget.pageController,
+              onPageChanged: onPageChanged,
+              scrollDirection: widget.scrollDirection,
+            ),
+            Positioned(
+              left: 10,
+              child: Container(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  "Collection ${currentIndex + 1}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17.0,
+                    decoration: null,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              right: 10,
+              child: Container(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  "${widget.galleryItems[currentIndex].toUpperCase()}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17.0,
+                    decoration: null,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
+    return PhotoViewGalleryPageOptions(
+      imageProvider: AssetImage(widget.galleryItems[index]),
+      initialScale: PhotoViewComputedScale.covered * 0.4,
+      minScale: PhotoViewComputedScale.contained * 0.4,
+      maxScale: PhotoViewComputedScale.covered * 1.0,
+    );
   }
 }

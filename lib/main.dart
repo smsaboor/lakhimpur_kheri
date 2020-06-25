@@ -1,106 +1,102 @@
-//taskkill /F /IM dart.exe
-import 'dart:async';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:lakhimpur_kheri/screens/homePage/HomePage2.dart';
-//import 'package:lakhimpur_kheri/login.dart';
-//import 'package:lakhimpur_kheri/splash.dart';
-import 'package:lakhimpur_kheri/splash.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:lakhimpur_kheri/localisation/localization_two/app_translations_delegate.dart';
-import 'package:lakhimpur_kheri/localisation/localization_two/application.dart';
-//"taskkill /F /IM dart.exe"    //on terminal paste and enter
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/Constants/constants.dart';
-import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/Model/theme_model.dart';
-import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/UI/Widgets/splash_screen.dart';
-import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/mtmain.dart';
-import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/UI/settings.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lakhimpur_kheri/login/authentication_bloc/authentication_bloc.dart';
+import 'package:lakhimpur_kheri/login/user_repository.dart';
+import 'package:lakhimpur_kheri/login/login/login.dart';
+import 'package:lakhimpur_kheri/login/splash_screen.dart';
+import 'package:lakhimpur_kheri/login/simple_bloc_delegate.dart';
+import 'package:lakhimpur_kheri/route.dart';
 import 'package:provider/provider.dart';
-
-
-//save all 5/3/2020
-
-
-//
-//void main() {
-//  WidgetsFlutterBinding.ensureInitialized();
-//  BlocSupervisor.delegate = SimpleBlocDelegate();
-//  final UserRepository userRepository = UserRepository();
-//  runApp(
-//    BlocProvider(
-//      create: (context) => AuthenticationBloc(
-//        userRepository: userRepository,
-//      )..add(AppStarted()),
-//      child: MyApp(userRepository: userRepository),
-//    ),
-//  );
-//}
-//
-//class MyApp extends StatelessWidget {
-//  final UserRepository _userRepository;
-//
-//  MyApp({Key key, @required UserRepository userRepository})
-//      : assert(userRepository != null),
-//        _userRepository = userRepository,
-//        super(key: key);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return MaterialApp(
-//      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-//        builder: (context, state) {
-//          if (state is Unauthenticated) {
-//            return LoginScreen(userRepository: _userRepository);
-//          }
-//          if (state is Authenticated) {
-//            return HomeScreen(name: state.displayName);
-//          }
-//          return SplashScreen();
-//        },
-//      ),
-//    );
-//  }
-//}
+import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/Model/theme_model.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:lakhimpur_kheri/splash.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    return Container(
-      color: Colors.green,
-      child: Text(
-        details.toString(),
-        style: TextStyle(
-          fontSize: 15.0,
-          color: Colors.white,
-        ),
-      ),
-    );
-  };
   WidgetsFlutterBinding.ensureInitialized();
-
+  BlocSupervisor.delegate = SimpleBlocDelegate();
+  final UserRepository userRepository = UserRepository();
   runApp(
-        MultiProvider(
-            providers: [
-              ChangeNotifierProvider<ThemeModel>(
-                create: (_) => ThemeModel(),
-              ),
-            ],
-            child: MtMyApp(),
-        ));
+    BlocProvider(
+      create: (context) => AuthenticationBloc(
+        userRepository: userRepository,
+      )..add(AuthenticationStarted()),
+      child: App(userRepository: userRepository),
+    ),
+  );
 }
 
-class MtMyApp extends StatelessWidget {
-  MtMyApp();
+class App extends StatelessWidget {
+  final UserRepository _userRepository;
+
+  App({Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, state) {
+          if (state is AuthenticationFailure) {
+            return LoginScreen(userRepository: _userRepository);
+          }
+          if (state is AuthenticationSuccess) {
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider<ThemeModel>(
+                  create: (_) => ThemeModel(),
+                ),
+              ],
+              child: MtMyApp(state.displayName),
+            );
+          }
+          return SplashScreen();
+        },
+      ),
+    );
+  }
+}
+//HomeScreen(name: state.displayName);
+
+class MtMyApp extends StatefulWidget {
+  final uuid;
+  MtMyApp(this.uuid);
+  @override
+  _MtMyAppState createState() => _MtMyAppState(uuid);
+}
+class _MtMyAppState extends State<MtMyApp> {
+  SharedPreferences prefs;
+  final uuid;
+  _MtMyAppState(this.uuid);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    restore();
+    restore2();
+  }
+  restore2() async {
+    final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    String uuuuid= await sharedPrefs.getString('uuId') ?? 'null';
+    debugPrint("uuuuid is:$uuuuid");
+  }
+
+  restore()async{
+     final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+      debugPrint("uuId is:$uuid");
+      await sharedPrefs?.setString("uuId", uuid);
+  }
+  @override
+  Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeModel>(
         create: (BuildContext context) => ThemeModel(),
         child: Consumer<ThemeModel>(builder: (context, model, __) {
@@ -122,26 +118,3 @@ class MtMyApp extends StatelessWidget {
         }));
   }
 }
-
-//class MyApp extends StatelessWidget {
-//  ThemeModel model;
-//  final SharedPreferences prefs;
-//  MyApp(this.model,{this.prefs});
-//  @override
-//  Widget build(BuildContext context) {
-//    debugPrint("My App Widget build(BuildContext context)"
-//               "name:${prefs.getString('name')}\n  "
-//               "email:${prefs.getString('email')}\n"
-//                "islogin:${prefs.getBool('islogin')}\n"
-//                "homeFirst:${prefs.getBool('homeFirst')}\n"
-//                 "url:${prefs.getString('url')}");
-//    return MaterialApp(
-//      debugShowCheckedModeBanner: false,
-//      title: "Lakhimpur-Kheri",
-//      theme: ThemeData(
-//        primarySwatch: Colors.indigo,
-//      ),
-//      home: SplashScr(prefs:prefs),
-//    );
-//  }
-//}

@@ -7,9 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:lakhimpur_kheri/features/taskPlanner/taskPlanner.dart';
 import 'package:lakhimpur_kheri/screens/health_n_fitness/bmi_calculator/bmimain.dart';
 import 'package:lakhimpur_kheri/screens/jobs/jobs.dart';
-import 'package:lakhimpur_kheri/screens/news/news.dart';
 import 'package:lakhimpur_kheri/screens/quiz/quiz.dart';
-import 'package:lakhimpur_kheri/translatorML_Kit/LanguageTranslator.dart';
+
 
 
 class Gym extends StatefulWidget {

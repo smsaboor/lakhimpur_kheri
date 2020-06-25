@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lakhimpur_kheri/screens/HomePageFinall/MultiTheme/mtmain.dart';
-import 'package:lakhimpur_kheri/screens/homePage/HomePage2.dart';
 import 'package:lakhimpur_kheri/login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:lakhimpur_kheri/localisation/localization_two/app_translations_delegate.dart';
@@ -32,9 +31,7 @@ class _RoutePageState extends State<RoutePage> {
   }
   @override
   Widget build(BuildContext context) {
-    if(prefs.getBool('islogin') != null){
-              if(prefs.getBool('islogin') == true){
-                prefs?.setBool("homeFirst", true);
+
                       return MaterialApp(
                         darkTheme: ThemeData.dark(),
                         theme: ThemeData(
@@ -60,44 +57,7 @@ class _RoutePageState extends State<RoutePage> {
                         ],
                         home: MainUI(this.model,prefs: prefs),
                       );
-                    }
-              else{
-                prefs?.setBool("homeFirst", false);
-                return MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  localizationsDelegates: [
-                    _newLocaleDelegate,
-                    //provides localised strings
-                    GlobalMaterialLocalizations.delegate,
-                    //provides RTL support
-                    GlobalWidgetsLocalizations.delegate,
-                  ],
-                  supportedLocales: [
-                    const Locale("en", ""),
-                    const Locale("es", ""),
-                  ],
-                  home:LoginScr(model),
-                );
-              }
-    }
-    else{
-      prefs?.setBool("homeFirst", false);
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        localizationsDelegates: [
-          _newLocaleDelegate,
-          //provides localised strings
-          GlobalMaterialLocalizations.delegate,
-          //provides RTL support
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: [
-          const Locale("en", ""),
-          const Locale("es", ""),
-        ],
-        home:LoginScr(model),
-      );
-    }
+
   }
 
   void onLocaleChange(Locale locale) {

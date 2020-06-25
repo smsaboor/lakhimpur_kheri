@@ -93,12 +93,6 @@ class SettingsPage extends StatelessWidget {
                     onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => ChangePasswordPage())),
                   ),
-                  ListTile(
-                    title: Text('Sign out'),
-                      leading: Image.asset('assets/icons/sign_out.png'),
-                    onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => WelcomeBackPage())),
-                  ),
                   
                 ],
               ),
